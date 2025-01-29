@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from 'react-router-dom';
+import Sidebar from './components/SIdebar';
+import ExpensesAndIncomes from './pages/ExpensesAndIncomes';
+import Home from './pages/Home';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='flex h-screen bg-gray-900 text-gray-100 overflow-hidden'>
+
+      {/* El background */}
+      <div className='fixed inset-0 z-0'>
+        <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80'/>
+        <div className='absolute inset-0 backdrop-blur-sm'/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      {/* El Menu del Costado Izquierdo(barra lateral->SideBar) */}
+      <Sidebar />
+
+      <Routes>
+        <Route path='/' element={<Home />}/> 
+        <Route path='/expensesandincomes' element={<ExpensesAndIncomes />}/> 
+      </Routes>
+     </div> 
+    )
 }
 
 export default App
