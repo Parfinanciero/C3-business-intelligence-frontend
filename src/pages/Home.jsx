@@ -6,6 +6,6 @@ const Home = () => {
       Home
     </div>
   )
-}gi
+}
 
 export default Home
