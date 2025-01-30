@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import BalanceChartCircle from "../components/expensesAndIncomes/BalanceChartCircle";
 import BalanceChartBar from "../components/expensesAndIncomes/BalanceChartBar";
+import SimpleBalanceCard from "../components/expensesAndIncomes/BalanceSheetCard";
 
-// Definir la interfaz para los datos de gastos e ingresos
 interface ExpenseData {
   totalExpenses: number;
 }
@@ -13,30 +13,32 @@ interface IncomeData {
   totalExpenses: number;
 }
 
-// Tipar el componente Home
 const Home: React.FC = () => {
-  // Tipar los estados
   const [expenseData, setExpenseData] = useState<ExpenseData | null>(null);
   const [incomeData, setIncomeData] = useState<IncomeData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const calculateBalance = (): string | null => {
+    if (incomeData && expenseData) {
+      const balance = incomeData.totalExpenses - expenseData.totalExpenses;
+      return balance.toFixed(2); // Convertir a formato de dos decimales
+    }
+    return null;
+  };
+
   useEffect(() => {
-    const fetchExpense = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
 
         const expenseResponse = await fetch("http://23.88.104.53:8081/api/finanzas/gastos/1/01");
-        if (!expenseResponse.ok) {
-          throw new Error(`Error al obtener los datos: ${expenseResponse.status}`);
-        }
+        if (!expenseResponse.ok) throw new Error(`Error al obtener los gastos: ${expenseResponse.status}`);
         const expenseData: ExpenseData = await expenseResponse.json();
         setExpenseData(expenseData);
 
         const incomeResponse = await fetch("http://23.88.104.53:8081/api/finanzas/ingresos/1/01");
-        if (!incomeResponse.ok) {
-          throw new Error(`Error al obtener los datos de ingresos: ${incomeResponse.status}`);
-        }
+        if (!incomeResponse.ok) throw new Error(`Error al obtener los ingresos: ${incomeResponse.status}`);
         const incomeData: IncomeData = await incomeResponse.json();
         setIncomeData(incomeData);
       } catch (err: any) {
@@ -46,7 +48,7 @@ const Home: React.FC = () => {
       }
     };
 
-    fetchExpense();
+    fetchData();
   }, []);
 
   if (loading) return <p>Cargando datos...</p>;
@@ -62,6 +64,7 @@ const Home: React.FC = () => {
         transition={{ delay: 0.3 }}
       >
         <h1>Bienvenido a Parfinanciero</h1>
+        
         {expenseData ? (
           <div>
             <h2>Total de Gastos: ${expenseData.totalExpenses.toFixed(2)}</h2>
@@ -76,6 +79,11 @@ const Home: React.FC = () => {
           </div>
         ) : (
           <p>No hay datos de ingresos disponibles.</p>
+        )}
+
+        {/* Renderizado del Balance General Calculado */}
+        {calculateBalance() !== null && (
+          <SimpleBalanceCard balanceSheet={`${calculateBalance()}`} />
         )}
       </motion.div>
 
