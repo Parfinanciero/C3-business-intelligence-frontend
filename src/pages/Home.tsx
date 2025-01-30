@@ -4,36 +4,48 @@ import Header from "../components/common/Header";
 import BalanceChartCircle from "../components/expensesAndIncomes/BalanceChartCircle";
 import BalanceChartBar from "../components/expensesAndIncomes/BalanceChartBar";
 
-const Home = () => {
-  const [expenseData, setExpenseData] = useState(null);
-  const [incomeData, setIncomeData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+// Definir la interfaz para los datos de gastos e ingresos
+interface ExpenseData {
+  totalExpenses: number;
+}
+
+interface IncomeData {
+  totalExpenses: number;
+}
+
+// Tipar el componente Home
+const Home: React.FC = () => {
+  // Tipar los estados
+  const [expenseData, setExpenseData] = useState<ExpenseData | null>(null);
+  const [incomeData, setIncomeData] = useState<IncomeData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchExpense = async () => {
       try {
         setLoading(true);
 
-        const expenseResponse = await fetch("http://localhost:8081/api/finanzas/gastos/1/02");
+        const expenseResponse = await fetch("http://23.88.104.53:8081/api/finanzas/gastos/1/01");
         if (!expenseResponse.ok) {
-          throw new Error(`Error al obtener los datos: ${response.status}`);
+          throw new Error(`Error al obtener los datos: ${expenseResponse.status}`);
         }
-        const expenseData = await expenseResponse.json();
+        const expenseData: ExpenseData = await expenseResponse.json();
         setExpenseData(expenseData);
 
-        const incomeResponse = await fetch("http://localhost:8081/api/finanzas/ingresos/1/02");
+        const incomeResponse = await fetch("http://23.88.104.53:8081/api/finanzas/ingresos/1/01");
         if (!incomeResponse.ok) {
           throw new Error(`Error al obtener los datos de ingresos: ${incomeResponse.status}`);
         }
-        const incomeData = await incomeResponse.json();
+        const incomeData: IncomeData = await incomeResponse.json();
         setIncomeData(incomeData);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message || "Error desconocido");
       } finally {
         setLoading(false);
       }
     };
+
     fetchExpense();
   }, []);
 
@@ -42,14 +54,14 @@ const Home = () => {
 
   return (
     <div className='flex-1 overflow-auto relative z-10'>
-      <Header title="Expenses And Incomes"/>
+      <Header title="Parfinanciero" />
       <motion.div
         className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0}}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <h1>Bienvenido a la página de Gastos e Ingresos</h1>
+        <h1>Bienvenido a Parfinanciero</h1>
         {expenseData ? (
           <div>
             <h2>Total de Gastos: ${expenseData.totalExpenses.toFixed(2)}</h2>
@@ -68,11 +80,15 @@ const Home = () => {
       </motion.div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
-        <BalanceChartCircle income={incomeData.totalExpenses} expense={expenseData.totalExpenses}/>
-        <BalanceChartBar income={incomeData.totalExpenses} expense={expenseData.totalExpenses}/>
+        {incomeData && expenseData && (
+          <>
+            <BalanceChartCircle income={incomeData.totalExpenses} expense={expenseData.totalExpenses} />
+            <BalanceChartBar income={incomeData.totalExpenses} expense={expenseData.totalExpenses} />
+          </>
+        )}
       </div>
     </div>
   );
-}
+};
 
-export default Home
+export default Home;
