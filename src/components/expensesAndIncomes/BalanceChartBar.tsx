@@ -2,10 +2,8 @@ import React from 'react';
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from "recharts";
 
-// Definir los colores
 const COLORS = ["#6366F1", "#8B5CF6"];
 
-// Definir la interfaz de las props
 interface BalanceChartBarProps {
   income: number;
   expense: number;
