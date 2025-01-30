@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import Sidebar from './components/SIdebar';
+import Sidebar from './components/Sidebar';
 import ExpensesAndIncomes from './pages/ExpensesAndIncomes';
 import Home from './pages/Home';
 
