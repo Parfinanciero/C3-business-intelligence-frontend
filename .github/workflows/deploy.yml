@@ -18,6 +18,14 @@ jobs:
       - name: Build Project
         run: npm run build
 
+      - name: Verify Build Output
+        run: |
+          if [ ! -d "build" ]; then
+            echo "Error: Directory 'build' does not exist."
+            exit 1
+          fi
+          ls -l build/
+
       - name: Upload Build to VPS (Temp)
         uses: appleboy/scp-action@v0.1.6
         with:
@@ -26,6 +34,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "build/"
           target: "/tmp/build-frontend-bi"
+          overwrite: true  # Asegúrate de sobrescribir el contenido si ya existe
 
       - name: Deploy to Production (Atomic)
         uses: appleboy/ssh-action@v0.1.6
@@ -67,3 +76,4 @@ jobs:
 
             # Recargar Nginx (si es necesario)
             sudo systemctl reload nginx
+          
