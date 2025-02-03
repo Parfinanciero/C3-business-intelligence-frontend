@@ -1,0 +1,69 @@
+name: Deploy Business Intelligence Frontend
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Upload Build to VPS (Temp)
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "build/"
+          target: "/tmp/build-frontend-bi"
+
+      - name: Deploy to Production (Atomic)
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            # Variables
+            DEPLOY_PATH="/var/www/frontend-bi/bussiness-intelligence-frontend"
+            OLD_DEPLOY_PATH="/var/www/frontend-bi/bussiness-intelligence-frontend_old"
+            TEMP_DEPLOY_PATH="/var/www/frontend-bi/bussiness-intelligence-frontend_temp_$(date +%s)"
+
+            # Crear carpeta temporal
+            sudo mkdir -p $TEMP_DEPLOY_PATH
+
+            # Mover archivos del build temporal a la carpeta nueva
+            sudo mv /tmp/build-frontend-bi/* $TEMP_DEPLOY_PATH
+
+            # Eliminar despliegue antiguo (si existe)
+            if [ -d "$OLD_DEPLOY_PATH" ]; then
+              sudo rm -rf $OLD_DEPLOY_PATH
+            fi
+
+            # Reemplazo atómico
+            if [ -d "$DEPLOY_PATH" ]; then
+              sudo mv $DEPLOY_PATH $OLD_DEPLOY_PATH
+            fi
+
+            sudo mv $TEMP_DEPLOY_PATH $DEPLOY_PATH
+
+            # Limpiar temporal y antiguo (opcional)
+            sudo rm -rf /tmp/build-frontend-bi
+            # sudo rm -rf $OLD_DEPLOY_PATH  # Descomenta si quieres eliminar el backup inmediatamente
+
+            # Permisos (ajusta según tu configuración)
+            sudo chown -R www-data:www-data $DEPLOY_PATH
+            sudo chmod -R 755 $DEPLOY_PATH
+
+            # Recargar Nginx (si es necesario)
+            sudo systemctl reload nginx
