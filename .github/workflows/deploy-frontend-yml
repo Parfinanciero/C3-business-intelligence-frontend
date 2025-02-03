@@ -1,0 +1,58 @@
+name : Deploy Frontend to VPS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Vite App
+        run: npm run build
+
+      - name: Add SSH Key to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ secrets.PORT }} -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+      
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SERVER_KEY }}
+
+      - name: Deploy to VPS
+        run: |
+          DEPLOY_DIR="/var/www/frontend-bi/bussiness-intelligence-frontend"
+          BUILD_DIR="dist"
+
+          echo "Eliminando archivos antiguos..."
+          ssh -p ${{ secrets.PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "rm -rf $DEPLOY_DIR/dist || true"
+
+          echo "Copiando nuevos archivos..."
+          scp -P ${{ secrets.PORT }} -r $BUILD_DIR/* ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:$DEPLOY_DIR/
+
+          
+          echo "Sirviendo la aplicación en el puerto 8045..."
+          ssh -p ${{ secrets.PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "\
+            sudo nohup serve -s $DEPLOY_DIR -l 8045 > $DEPLOY_DIR/serve.log 2>&1 &"
+
+          echo "Despliegue completado correctamente"
+
+
