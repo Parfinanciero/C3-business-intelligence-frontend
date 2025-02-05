@@ -49,9 +49,10 @@ const Home: React.FC = () => {
         const incomeData: IncomeData = await incomeResponse.json();
         setIncomeData(incomeData);
 
-        const expenseCategoryResponse = await fetch("http://localhost:8081/api/finanzas/metricas/gastos-categoria/1/01/");
+        const expenseCategoryResponse = await fetch("http://localhost:8081/api/finanzas/metricas/gastos-categoria/1/01");
         if (!expenseCategoryResponse.ok) throw new Error(`Error al obtener las categorias: ${expenseCategoryResponse.status}`);
-        const categoryExpenseData: CategoryData[] = await expenseCategoryResponse.json();
+        const categoryExpenseData: CategoryData[] | null  = await expenseCategoryResponse.json();
+        console.log(categoryExpenseData)
         setCategoryData(categoryExpenseData);
 
       } catch (err: any) {
@@ -107,7 +108,7 @@ const Home: React.FC = () => {
             <>
               <BalanceChartCircle income={incomeData.totalExpenses} expense={expenseData.totalExpenses} />
               <BalanceChartBar income={incomeData.totalExpenses} expense={expenseData.totalExpenses} />
-              <CategoryDistributionChart categories={categoryExpenseData}/>
+              <CategoryDistributionChart categories={categoryExpenseData || [] }/>
             </>
           )}
         </div>

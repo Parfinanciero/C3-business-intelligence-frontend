@@ -7,7 +7,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recha
 //   value: number;
 // }
 
-interface CategoryData {
+interface CategoryData  {
     category: string;
     percentage: number;
 }
