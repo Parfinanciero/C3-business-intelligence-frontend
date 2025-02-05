@@ -49,9 +49,10 @@ jobs:
           scp -P ${{ secrets.PORT }} -r $BUILD_DIR/* ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:$DEPLOY_DIR/
 
           
-          echo "Sirviendo la aplicación en el puerto 8045..."
+          echo "Ejecutando el script de inicio..."
           ssh -p ${{ secrets.PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "\
-            sudo nohup serve -s $DEPLOY_DIR -l 8045 > $DEPLOY_DIR/serve.log 2>&1 &"
+            /var/www/frontend-bi/bussiness-intelligence-frontend/init.sh start \
+          "
 
           echo "Despliegue completado correctamente"
 
