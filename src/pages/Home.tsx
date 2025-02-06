@@ -4,7 +4,8 @@ import Header from "../components/common/Header";
 import BalanceChartCircle from "../components/Home/BalanceChartCircle";
 import BalanceChartBar from "../components/Home/BalanceChartBar";
 import SimpleBalanceCard from "../components/Home/BalanceSheetCard";
-import CategoryDistributionChart from "../components/Home/CategoryIncomeChart";
+import CategoryDistributionChart from "../components/Home/CategoryExpensesChart";
+import GraphicBasic from "../components/Home/GraphicBasic";
 
 interface ExpenseData {
   totalExpenses: number;
@@ -109,6 +110,7 @@ const Home: React.FC = () => {
               <BalanceChartCircle income={incomeData.totalExpenses} expense={expenseData.totalExpenses} />
               <BalanceChartBar income={incomeData.totalExpenses} expense={expenseData.totalExpenses} />
               <CategoryDistributionChart categories={categoryExpenseData || [] }/>
+              <GraphicBasic />
             </>
           )}
         </div>

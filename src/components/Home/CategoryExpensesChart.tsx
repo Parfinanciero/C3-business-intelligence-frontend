@@ -2,10 +2,6 @@ import { motion } from "framer-motion";
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
-// interface CategoryData {
-//   name: string;
-//   value: number;
-// }
 
 interface CategoryData  {
     category: string;
@@ -16,13 +12,6 @@ interface CategoryListProps {
     categories: CategoryData[];
 }
 
-// const categoryData: CategoryData[] = [
-//   { name: "Electronics", value: 4500 },
-//   { name: "Clothing", value: 3200 },
-//   { name: "Home & Garden", value: 2800 },
-//   { name: "Books", value: 2100 },
-//   { name: "Sports & Outdoors", value: 1900 },
-// ];
 
 const COLORS = ["#EC4899", "#10B981", "#F59E0B"];
 
