@@ -40,17 +40,17 @@ const Home: React.FC = () => {
       try {
         setLoading(true);
 
-        const expenseResponse = await fetch("http://localhost:8081/api/finanzas/gastos/1/01");
+        const expenseResponse = await fetch("http://23.88.104.53:8047/api/finanzas/gastos/1/01");
         if (!expenseResponse.ok) throw new Error(`Error al obtener los gastos: ${expenseResponse.status}`);
         const expenseData: ExpenseData = await expenseResponse.json();
         setExpenseData(expenseData);
 
-        const incomeResponse = await fetch("http://localhost:8081/api/finanzas/ingresos/1/01");
+        const incomeResponse = await fetch("http://23.88.104.53:8047/api/finanzas/ingresos/1/01");
         if (!incomeResponse.ok) throw new Error(`Error al obtener los ingresos: ${incomeResponse.status}`);
         const incomeData: IncomeData = await incomeResponse.json();
         setIncomeData(incomeData);
 
-        const expenseCategoryResponse = await fetch("http://localhost:8081/api/finanzas/metricas/gastos-categoria/1/01");
+        const expenseCategoryResponse = await fetch("http://23.88.104.53:8047/api/finanzas/metricas/gastos-categoria/1/01");
         if (!expenseCategoryResponse.ok) throw new Error(`Error al obtener las categorias: ${expenseCategoryResponse.status}`);
         const categoryExpenseData: CategoryData[] | null  = await expenseCategoryResponse.json();
         console.log(categoryExpenseData)
