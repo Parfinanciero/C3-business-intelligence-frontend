@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import ExpensesAndIncomes from './pages/ExpensesAndIncomes';
 import Home from './pages/Home';
+import { Goals } from './pages/Goals';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />}/> 
         <Route path='/expensesandincomes' element={<ExpensesAndIncomes />}/> 
+        <Route path='/goals' element={<Goals/>}></Route>
       </Routes>
      </div> 
     )
