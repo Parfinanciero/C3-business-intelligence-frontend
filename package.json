@@ -11,6 +11,7 @@
   },
   "main": "src/main.tsx",
   "dependencies": {
+    "@module-federation/vite": "^1.2.2",
     "@mui/icons-material": "^6.4.2",
     "@types/jest": "^29.5.14",
     "framer-motion": "^12.3.1",
