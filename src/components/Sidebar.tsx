@@ -3,8 +3,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users } from "lucide-react";
-import Button from "@mui/material/Button";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { useAuth } from 'remote/AuthContext';
 
 interface SidebarItem {
@@ -26,7 +24,7 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
 
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-  const { Logout } = useAuth() 
+  const { logout } = useAuth();
   return (
     <motion.div
       className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${
@@ -43,7 +41,12 @@ const Sidebar: React.FC = () => {
           className="p-2 rounded-full hover:bg-gray-700 transition-colors max-w-fit"
         >
           <Menu size={24} />
+
         </motion.button>
+
+         <button onClick={ logout }>
+            Salir
+          </button>
 
         {/* Navegación */}
         <nav className="mt-8 flex-grow">
@@ -70,10 +73,7 @@ const Sidebar: React.FC = () => {
           ))}
         </nav>
 
-        <div className="mt-auto">
-          <button onClick={Logout}>
-            Salir
-          </button>
+        <div>
           
         </div>
       </div>
