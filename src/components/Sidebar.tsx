@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users } from "lucide-react";
-import { useAuth } from 'remote/AuthContext';
+// import { useAuth } from 'remote/AuthContext';
 
 interface SidebarItem {
   name: string;
@@ -24,7 +24,7 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
 
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-  const { logout } = useAuth();
+  // const { logout } = useAuth();
   return (
     <motion.div
       className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${
@@ -44,9 +44,9 @@ const Sidebar: React.FC = () => {
 
         </motion.button>
 
-         <button onClick={ logout }>
+         {/* <button onClick={ logout }>
             Salir
-          </button>
+          </button> */}
 
         {/* Navegación */}
         <nav className="mt-8 flex-grow">
